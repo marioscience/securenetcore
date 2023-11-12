@@ -1,0 +1,41 @@
+1. Actualización del sistema:
+Antes de cualquier instalación, es una buena práctica actualizar todos los paquetes del sistema.
+
+Copy code:
+sudo apt update && sudo apt upgrade -y
+2. Instalación de OpenVPN:
+
+Copy code
+sudo apt install openvpn -y
+3. Configuración de OpenVPN:
+
+a. Obtener scripts de configuración fácil:
+Estos scripts te ayudarán a generar certificados y configuraciones para el servidor y los clientes.
+
+arduino
+Copy code
+sudo wget https://git.io/vpn -O openvpn-install.sh
+sudo bash openvpn-install.sh
+Durante la ejecución de este script, se te pedirá que proporciones cierta información:
+
+Dirección IP del servidor: en general, deberías aceptar la dirección IP predeterminada (la de tu instancia de Google Cloud).
+Protocolo: Recomiendo usar UDP ya que es más rápido.
+Puerto: El puerto por defecto 1194 está bien a menos que tengas algún conflicto.
+Nombre del primer cliente: puedes darle cualquier nombre. Esto generará un archivo de configuración que usarás en tu cliente para conectarte al VPN.
+Ajustes de encriptación: elige la opción que te parezca mejor. En general, el cifrado más alto (256 bits) es más seguro, pero puede ser ligeramente más lento.
+4. Configuración del Firewall:
+Necesitas permitir el tráfico en el puerto que configuraste para OpenVPN (por defecto es 1194). Parece que ya has trabajado con las reglas de firewall en Google Cloud, así que solo asegúrate de permitir el tráfico en este puerto.
+
+5. Inicio de OpenVPN:
+Después de configurar, puedes iniciar el servidor OpenVPN con:
+
+Copy code
+sudo systemctl start openvpn@server
+Para asegurarte de que OpenVPN se inicie en cada reinicio, habilita el servicio:
+
+Copy code
+sudo systemctl enable openvpn@server
+6. Configuración del cliente:
+El script que ejecutaste anteriormente habrá creado un archivo .ovpn para tu cliente. Transfiere este archivo a tu dispositivo cliente y utilízalo con un cliente OpenVPN para conectarte.
+
+Con estos pasos, deberías tener un servidor OpenVPN funcionando y listo para usar. Sin embargo, si prefieres un rendimiento aún mejor y una configuración más fácil, considera usar algo como "WireGuard", que es un protocolo VPN más nuevo y más rápido que OpenVPN.
